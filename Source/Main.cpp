@@ -164,8 +164,8 @@ int main(void)
     generate_grid(gridSize, cellSize, gridVert, grid);
     
     myShader.use();
-    myShader.setVec3("colorStart", glm::vec3(0.8f, 0.0f, 0.9f)); // Start color (e.g., red)
-    myShader.setVec3("colorEnd", glm::vec3(0.0f, 0.8f, 0.3f));
+    myShader.setVec3("colorStart", glm::vec3(0.6f, 0.0f, 0.5f)); // Start color (e.g., red)
+    myShader.setVec3("colorEnd", glm::vec3(0.0f, 0.6f, 0.5f));
     //setting projection matrix
     glm::mat4 projection = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(45.0f), static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.1f, 100.0f);
@@ -183,6 +183,7 @@ int main(void)
 
     while (!glfwWindowShouldClose(window))
     {
+        bool showModelMatrix = true;
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -193,28 +194,7 @@ int main(void)
         
         ImGui::NewFrame();
 
-        
-        if (ImGui::Begin("Visualization"))
-        {
-           
-            ImGui::Text("Translation");
-            ImGui::SliderFloat3("position", &cubeTranslation.x, -25.0f, 25.0f);
-            ImGui::SameLine();
-            ImGui::Text("     (use WASD to move camera!)");
-            ImGui::Text("Rotation");
-            ImGui::SliderFloat3("Rotation", &cubeRotation.x, -180.0f, 180.0f);
-            ImGui::SameLine();
-            ImGui::Text("     (Mouse look in progress.)");
-            ImGui::Text("Scale");
-            ImGui::SliderFloat3("Scale", &cubeScale.x, -40.0f, 40.0f);
-            ImGui::Text("Grid size: ");
-            ImGui::InputInt("##InputValue", &gridSize, 0.1f, 1.0f);
-
-            if (ImGui::Button("Submit"))
-            {
-                generate_grid(gridSize, cellSize, gridVert, grid);
-            }
-        }ImGui::End();
+       
         ImGuiIO& io = ImGui::GetIO();
         
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -252,6 +232,46 @@ int main(void)
        glEnableVertexAttribArray(0);
        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+       if (ImGui::Begin("Visualization"))
+       {
+
+           ImGui::Text("Translation");
+           ImGui::SliderFloat3("position", &cubeTranslation.x, -25.0f, 25.0f);
+           ImGui::SameLine();
+           ImGui::Text("     (use WASD to move camera!)");
+           ImGui::Text("Rotation");
+           ImGui::SliderFloat3("Rotation", &cubeRotation.x, -180.0f, 180.0f);
+           ImGui::SameLine();
+           ImGui::Text("     (Mouse look in progress.)");
+           ImGui::Text("Scale");
+           ImGui::SliderFloat3("Scale", &cubeScale.x, -40.0f, 40.0f);
+           ImGui::Text("Grid size: ");
+           ImGui::InputInt("##InputValue", &gridSize, 0.1f, 1.0f);
+         /*  ImGui::Text("Model Matrix:");
+           ImGui::Text("    X         Y         Z");
+           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[0][0], cubeModel[0][1], cubeModel[0][2], cubeModel[0][3]);
+           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[1][0], cubeModel[1][1], cubeModel[1][2], cubeModel[1][3]);
+           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[2][0], cubeModel[2][1], cubeModel[2][2], cubeModel[2][3]);
+           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[3][0], cubeModel[3][1], cubeModel[3][2], cubeModel[3][3]);*/
+           if (ImGui::Button("Submit"))
+           {
+               generate_grid(gridSize, cellSize, gridVert, grid);
+           }
+       }ImGui::End();
+    
+       if (showModelMatrix)
+       {
+           ImGui::Begin("Model Matrix", &showModelMatrix);
+           ImGui::SetWindowFontScale(2.0f);
+           ImGui::Text("  X     Y     Z");
+           ImGui::Text("%.2f, %.2f, %.2f", cubeModel[0][0], cubeModel[0][1], cubeModel[0][2]);
+           ImGui::Text("%.2f, %.2f, %.2f", cubeModel[1][0], cubeModel[1][1], cubeModel[1][2]);
+           ImGui::Text("%.2f, %.2f, %.2f", cubeModel[2][0], cubeModel[2][1], cubeModel[2][2]);
+
+           ImGui::End();
+       }
 
        ImGui::Render();
        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
