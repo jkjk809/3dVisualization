@@ -226,7 +226,7 @@ int main(void)
        cubeModel = glm::rotate(cubeModel, glm::radians(cubeRotation.y), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around Y axis
        cubeModel = glm::rotate(cubeModel, glm::radians(cubeRotation.z), glm::vec3(0.0f, 0.0f, 1.0f)); // Rotate around Z axis
        cubeModel = glm::scale(cubeModel, cubeScale);
-      // cubeModel = glm::scale(cubeModel, scaleVector);  // Scale
+
        myShader.setMat4("model", cubeModel);
 
        glEnableVertexAttribArray(0);
@@ -249,16 +249,17 @@ int main(void)
            ImGui::SliderFloat3("Scale", &cubeScale.x, -40.0f, 40.0f);
            ImGui::Text("Grid size: ");
            ImGui::InputInt("##InputValue", &gridSize, 0.1f, 1.0f);
-         /*  ImGui::Text("Model Matrix:");
-           ImGui::Text("    X         Y         Z");
-           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[0][0], cubeModel[0][1], cubeModel[0][2], cubeModel[0][3]);
-           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[1][0], cubeModel[1][1], cubeModel[1][2], cubeModel[1][3]);
-           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[2][0], cubeModel[2][1], cubeModel[2][2], cubeModel[2][3]);
-           ImGui::Text("%.2f, %.2f, %.2f, %.2f", cubeModel[3][0], cubeModel[3][1], cubeModel[3][2], cubeModel[3][3]);*/
            if (ImGui::Button("Submit"))
            {
                generate_grid(gridSize, cellSize, gridVert, grid);
            }
+           if (ImGui::Button("Reset Object"))
+           {
+               cubeTranslation = glm::vec3(0, 1.0, 0);
+               cubeRotation = glm::vec3(0.0f, 0.0f, 0.0f);
+               cubeScale = glm::vec3(1.0, 1.0, 1.0);
+           }
+           
        }ImGui::End();
     
        if (showModelMatrix)
@@ -269,7 +270,7 @@ int main(void)
            ImGui::Text("%.2f, %.2f, %.2f", cubeModel[0][0], cubeModel[0][1], cubeModel[0][2]);
            ImGui::Text("%.2f, %.2f, %.2f", cubeModel[1][0], cubeModel[1][1], cubeModel[1][2]);
            ImGui::Text("%.2f, %.2f, %.2f", cubeModel[2][0], cubeModel[2][1], cubeModel[2][2]);
-
+           ImGui::Text("%.2f, %.2f, %.2f", cubeModel[3][0], cubeModel[3][1], cubeModel[3][2]);
            ImGui::End();
        }
 
